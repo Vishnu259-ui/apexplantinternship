@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Practice Project</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: beige;
+    }
+
+    header {
+      background: cyan;
+      color: rgb(7, 0, 0);
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: bisque;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #333;
+      color: white;
+    }
+
+    button:hover {
+      background: #555;
+    }
+
+    /* Tablet */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Skill Practice Project</h1>
+    <p>Responsive Design--Interactive Quiz--API Fetch</p>
+  </header>
+
+  <div class="container">
+    <!-- Quiz Section -->
+    <div class="card">
+      <h2>Interactive Quiz</h2>
+      <h3 id="question">Loading...</h3>
+      <div id="options"></div>
+      <button onclick="nextQuestion()">Next</button>
+      <h4 id="result"></h4>
+    </div>
+    <br><br>
+
+    <!-- Joke Generator Section -->
+    <div class="card">
+      <h2>😂 Joke Generator</h2>
+      <p id="joke">Click the button to get a joke!</p>
+      <button onclick="getJoke()">Get Joke</button>
+    </div>
+
+  <script>
+    // QUIZ DATA
+    const quizData = [
+      {
+        question: "What is the capital of France?",
+        options: ["Paris", "London", "Rome", "Berlin"],
+        answer: "Paris"
+      },
+      {
+        question: "Which language runs in a web browser?",
+        options: ["Java", "C", "Python", "JavaScript"],
+        answer: "JavaScript"
+      },
+      {
+        question: "What does CSS stand for?",
+        options: [
+          "Cascading Style Sheets",
+          "Computer Style System",
+          "Creative Style Syntax",
+          "Control Style Sheet"
+        ],
+        answer: "Cascading Style Sheets"
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quizData[current];
+      document.getElementById("question").textContent = q.question;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === q.answer) score++;
+          nextQuestion();
+        };
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < quizData.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("result").textContent =
+          `You scored ${score} out of ${quizData.length}`;
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("question").textContent = "Quiz Finished!";
+      }
+    }
+
+    loadQuestion();
+
+    // JOKE GENERATOR
+    async function getJoke() {
+      try {
+        const res = await fetch("https://official-joke-api.appspot.com/random_joke");
+        const data = await res.json();
+        document.getElementById("joke").textContent = `${data.setup} - ${data.punchline}`;
+      } catch (error) {
+        document.getElementById("joke").textContent = "Oops! Couldn't fetch a joke.";
+      }
+    }
+  </script>
+</body>
+</html>
