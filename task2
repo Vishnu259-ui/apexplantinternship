@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>APEX INT TASK2</title>
+        <link rel="icon" type="image/jpg" href="C:\\Users\\mandala\\OneDrive\\Desktop\\OIP.jpg">
+        <link rel="stylesheet" href="stylesheet.css">
+    </head>
+    <body>
+        <header class="site-header">
+            <h1>Apexplanet Task 1</h1>
+            <h2>My name is Vishnu</h2>
+            <h3>An Intern</h3>
+            <nav class="nav">
+                <a href="#contact">Contact</a>
+                <a href="#todo">To-Do List</a>
+            </nav>
+        </header>
+
+        <main class="layout">
+            <!-- Contact Form -->
+            <section id="contact" class="card">
+                <h2>Contact Us</h2>
+                <form id="contactForm" novalidate>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+
+                    <small class="error" id="formError"></small>
+                    <p class="success" id="formSuccess" hidden>✅ Your message was sent!</p>
+
+                    <button type="submit">Submit</button>
+                </form>
+            </section>
+
+            <!-- To-Do List -->
+            <section id="todo" class="card">
+                <h2>To-Do List</h2>
+                <form id="todoForm">
+                    <input type="text" id="todoInput" placeholder="Add a new task..." />
+                    <button type="submit">Add</button>
+                </form>
+                <ul id="todoList"></ul>
+                <button id="clearAll">Clear All</button>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <small>&copy; <span id="year"></span> ApexPlanet</small>
+        </footer>
+
+        <script>
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            // ===== Form Validation =====
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                let name = document.getElementById('name').value.trim();
+                let email = document.getElementById('email').value.trim();
+                let message = document.getElementById('message').value.trim();
+                let error = document.getElementById('formError');
+                let success = document.getElementById('formSuccess');
+
+                error.textContent = '';
+                success.hidden = true;
+
+                if (!name || !email || !message) {
+                    error.textContent = 'All fields are required.';
+                    return;
+                }
+                const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+                if (!emailPattern.test(email)) {
+                    error.textContent = 'Enter a valid email address.';
+                    return;
+                }
+                success.hidden = false;
+                this.reset();
+            });
+
+            // ===== To-Do List =====
+            const todoForm = document.getElementById('todoForm');
+            const todoInput = document.getElementById('todoInput');
+            const todoList = document.getElementById('todoList');
+            const clearAllBtn = document.getElementById('clearAll');
+
+            todoForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const task = todoInput.value.trim();
+                if (task) {
+                    const li = document.createElement('li');
+                    li.textContent = task;
+                    li.addEventListener('click', () => li.remove());
+                    todoList.appendChild(li);
+                    todoInput.value = '';
+                }
+            });
+
+            clearAllBtn.addEventListener('click', () => {
+                todoList.innerHTML = '';
+            });
+        </script>
+    </body>
+</html>
